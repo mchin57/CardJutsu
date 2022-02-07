@@ -7,28 +7,6 @@
 using namespace std;
 using namespace chrono;
 
-class card{
-  public:
-    int value; //1-9
-    int type;//0 = ice, 1 = earth , 2 = fire
-
-    void printStats(){
-        string tpe = "-1";
-        switch(type){
-            case 0:
-                tpe = "ice";
-                break;
-            case 1:
-                tpe = "earth";
-                break;
-            case 2:
-                tpe = "fire";
-                break;
-        }
-        cout << "This is a " << tpe << " card with a value of " << value << endl;
-    }
-};
-
 double deceRand(){//this is neither a good sudorandom number gen nor is it efficient.
     //it does appear to be marginally better than rand() though so I'll take it
     this_thread::sleep_for(milliseconds(2));
@@ -67,14 +45,37 @@ double deceRand(){//this is neither a good sudorandom number gen nor is it effic
             break;
         default:
             out = -1;
-        }
+    }
 
     return out;
 }
 
+class card{
+  public:
+    int value; //1-9
+    int type;//0 = ice, 1 = earth , 2 = fire
+
+    void printStats(){
+        string tpe = "-1";
+        switch(type){
+            case 0:
+                tpe = "ice";
+                break;
+            case 1:
+                tpe = "earth";
+                break;
+            case 2:
+                tpe = "fire";
+                break;
+        }
+        cout << "This is a " << tpe << " card with a value of " << value << endl;
+    }
+};
+
 card getRandomCard(){
-    int val = int(deceRand() * 10);
-    int type = int(deceRand() * 3);
+    srand((duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count()));
+    int val = (rand()%10);
+    int type = int((double(rand()%10)/10)*3);
     card out{};
     out.value = val;
     out.type = type;
@@ -82,10 +83,61 @@ card getRandomCard(){
     return out;
 }
 
+
+class Deck{//is an implimentation of a que designed specificailly for the card class
+public:
+    card data[10];
+    int Qpoint = 0;
+
+    Deck(){
+        for(int i = 0; i<10; i++){
+            replace(getRandomCard());
+        }
+    }
+
+    void replace(card c1){
+        data[Qpoint] = c1;
+        Qpoint++;
+    }
+
+    card draw(){
+        card out = data[0];
+        for(int i = 1; i<Qpoint; i++){
+            data[i-1] = data[i];
+        }
+        Qpoint--;
+        return out;
+    }
+
+};
+
+class hand{
+public:
+    Deck deck;
+    card inHand[4];
+
+    hand(Deck deck){//constructor
+        deck = deck;
+        for(int i = 0; i <4; i++){
+            inHand[i] = deck.draw();
+        }
+    }
+
+    void viewHand(){
+        for(int i = 0; i<4; i++){
+            inHand[i].printStats();
+        }
+    }
+
+};
+
 int main() {
-    card c1{};
-    c1.value = 1;
-    c1.type = 2;
-    getRandomCard().printStats();
+    //srand((duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count()));
+    /*for(int i = 0; i < 100; i++){
+        cout<<int((double(rand()%10)/10)*3)<<endl;
+    }*/
+    Deck d1;
+    hand h1(d1);
+    h1.viewHand();
     return 0;
 }

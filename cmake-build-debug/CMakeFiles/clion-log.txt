@@ -1,4 +1,4 @@
-C:\Users\57tuc\AppData\Local\JetBrains\Toolbox\apps\CLion\ch-0\213.6461.75\bin\cmake\win\bin\cmake.exe -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=C:/Users/57tuc/AppData/Local/JetBrains/Toolbox/apps/CLion/ch-0/213.6461.75/bin/ninja/win/ninja.exe -G Ninja C:\Users\57tuc\CLionProjects\CardJutsu
+C:\Users\57tuc\AppData\Local\JetBrains\Toolbox\apps\CLion\ch-0\213.6461.75\bin\cmake\win\bin\cmake.exe -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - MinGW Makefiles" C:\Users\57tuc\CLionProjects\CardJutsu
 -- The C compiler identification is GNU 11.2.0
 -- The CXX compiler identification is GNU 11.2.0
 -- Detecting C compiler ABI info
