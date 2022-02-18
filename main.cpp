@@ -3,11 +3,10 @@
 #include <thread>
 #include <unistd.h>
 
-
 using namespace std;
 using namespace chrono;
 
-double deceRand(){//this is neither a good sudorandom number gen nor is it efficient.
+double deceRand() {//this is neither a good sudorandom number gen nor is it efficient.
     //it does appear to be marginally better than rand() though so I'll take it
     this_thread::sleep_for(milliseconds(2));
     double out = -1;
@@ -53,27 +52,27 @@ double deceRand(){//this is neither a good sudorandom number gen nor is it effic
 class card{
   public:
     int value; //1-9
-    int type;//0 = ice, 1 = earth , 2 = fire
+    int type;//0 = snow, 1 = water , 2 = fire
 
     void printStats(){
         string tpe = "-1";
         switch(type){
             case 0:
-                tpe = "ice";
+                tpe = "snow";
                 break;
             case 1:
-                tpe = "earth";
+                tpe = "water";
                 break;
             case 2:
                 tpe = "fire";
                 break;
         }
-        cout << "This is a " << tpe << " card with a value of " << value << endl;
+        cout << "a " << tpe << " card with a value of " << value;
     }
 };
 
 card getRandomCard(){
-    srand((duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count()));
+    //srand((duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count()));
     int val = (rand()%10);
     int type = int((double(rand()%10)/10)*3);
     card out{};
@@ -126,18 +125,101 @@ public:
     void viewHand(){
         for(int i = 0; i<4; i++){
             inHand[i].printStats();
+            cout << endl;
         }
     }
 
+    card playCard(int selection){
+        card out = inHand[selection];
+        deck.replace(out);
+        inHand[selection] = deck.draw();
+        return out;
+    }
 };
 
+int fight(card c1, card c2){//returns either 1, 2 or 3. 1 or 2 indicates if the first or second card won, and 3 indicates a tie.
+    if(c1.type == c2.type){
+        if(c1.value > c2.value){
+            return 1;
+        }
+        else if(c1.value < c2.value){
+            return 2;
+        }
+        else{
+            return 3;
+        }
+    }
+     //0 = snow, 1 = water, 2 = fire -- snow beats water beats fire -- snow < water < fire
+     if((c1.type < c2.type)){
+         cout <<"a";
+         return (c2.type - c1.type); //cases: (snow, water -> snow wins, 1-0 = 1), (snow, fire -> fire wins, 2-0 = 2), (water, fire -> water wins, 2-1 = 1)
+     }
+     else if((c2.type < c1.type)) {
+         cout <<"b";
+         return (3-(c1.type - c2.type));
+     }
+     return -1;
+}
+
 int main() {
-    //srand((duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count()));
+    srand((duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count()));
     /*for(int i = 0; i < 100; i++){
         cout<<int((double(rand()%10)/10)*3)<<endl;
     }*/
+    card c1 = getRandomCard();
+    card c2 = getRandomCard();
+    c1.printStats();
+    c2.printStats();
+    cout << fight(c1,c2);
+
+    cout << "Welcome to definitely not club penguin's card jutsu! What would you like to do?" << endl;
+    cout << "hand" << endl << "history" << endl << "play card" << endl << "help" << endl << "quit";
     Deck d1;
     hand h1(d1);
-    h1.viewHand();
+    Deck d2;
+    hand h2(d2);
+    while(true) {
+        string input;
+        getline(cin,input);
+
+        if(input == "quit"){
+            break;
+        }
+        else if(input == "hand"){
+            h1.viewHand();
+        }
+        else if (input == "play card"){
+            int choice;
+            while(true) {//begin checking loop
+                cout << "What card would you like to play? (1,2,3,4)" << endl;
+                cin >> choice;
+                if((choice == 1) or (choice == 2) or (choice == 3) or (choice == 4)){
+                    break;
+                }
+                else{
+                    cout << "Please chose 1, 2, 3, or 4." << endl;
+                }
+            }//end checking loop
+            card p1Card = h1.playCard(choice-1);
+            cout << "You played "; p1Card.printStats();
+            card p2Card = h2.playCard(rand()%4);
+            int result = fight(p1Card,p2Card);
+            switch(result){
+                case(1):
+                    cout << ". The opponent played ";  p2Card.printStats(); cout << " meaning that the player won!" << endl;
+                    break;
+                case(2):
+                    cout << ". The opponent played "; p2Card.printStats(); cout <<" meaning that the player lost..." << endl;
+                    break;
+                case(3):
+                    cout << ". The opponent played "; p2Card.printStats(); cout <<" meaning that you tied." << endl;
+                    break;
+                default:
+                    cout << "Error comparing result = " << result;
+                    break;
+            }
+        }
+    }
+
     return 0;
 }
