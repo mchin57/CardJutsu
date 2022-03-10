@@ -1,0 +1,3 @@
+C:\Users\57tuc\AppData\Local\JetBrains\Toolbox\apps\CLion\ch-0\213.6461.75\bin\cmake\win\bin\cmake.exe -E rm -f CMakeFiles\CardJutsu.dir/objects.a
+C:\Users\57tuc\AppData\Local\JetBrains\Toolbox\apps\CLion\ch-0\213.6461.75\bin\mingw\bin\ar.exe qc CMakeFiles\CardJutsu.dir/objects.a @CMakeFiles\CardJutsu.dir\objects1.rsp
+C:\Users\57tuc\AppData\Local\JetBrains\Toolbox\apps\CLion\ch-0\213.6461.75\bin\mingw\bin\g++.exe -g -Wl,--whole-archive CMakeFiles\CardJutsu.dir/objects.a -Wl,--no-whole-archive -o CardJutsu.exe -Wl,--out-implib,libCardJutsu.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\CardJutsu.dir\linklibs.rsp
